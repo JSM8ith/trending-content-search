@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Content Hub - Request Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #020617;
+            --primary-light: #312e81;
+            --accent: #a855f7;
+            --accent-light: #c084fc;
+            --blue: #3b82f6;
+            --surface: #1e293b;
+            --surface-light: #334155;
+            --text: #f1f5f9;
+            --text-dim: #94a3b8;
+            --border: #475569;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: linear-gradient(to bottom right, var(--primary), var(--primary-light), var(--primary));
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .background-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1));
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.6s ease-out 0.2s backwards;
+        }
+
+        .info-box h2 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: var(--accent-light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-box p {
+            color: var(--text);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .info-box li {
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+            position: relative;
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+        }
+
+        .info-box li strong {
+            color: var(--accent-light);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .form-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            animation: fadeInUp 0.6s ease-out 0.4s backwards;
+        }
+
+        .form-section {
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        .category-option {
+            position: relative;
+        }
+
+        .category-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .category-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: var(--primary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-height: 100px;
+        }
+
+        .category-option input[type="radio"]:checked + .category-label {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(59, 130, 246, 0.2));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .category-label:hover {
+            border-color: var(--accent-light);
+            transform: translateY(-2px);
+        }
+
+        .category-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .category-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 22px;
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Sora', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(168, 85, 247, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .feature-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px rgba(168, 85, 247, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .form-card { padding: 24px; }
+            .category-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+            .logo-container { flex-direction: column; }
+        }
+
+        .stats-banner {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(59, 130, 246, 0.15));
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 32px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 12px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-glow"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo">⚡</div>
+                <h1>Trending Content Hub</h1>
+            </div>
+            <p class="subtitle">AI-Powered Trending Content Discovery</p>
+        </header>
+
+        <div class="stats-banner">
+            <div class="stat-item">
+                <div class="stat-number">12-15</div>
+                <div class="stat-label">Trending Stories</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">70-85</div>
+                <div class="stat-label">Character Headlines</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">1-10</div>
+                <div class="stat-label">Viral Score Rating</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Content Categories</div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h2>📋 How This Works</h2>
+            <p>
+                Select your content category below and click "Find Trending Content." This will open Claude 
+                with a specialized prompt that searches the web and analyzes the latest trending stories 
+                across social media, news platforms, and content sites.
+            </p>
+            <p style="margin-bottom: 12px;"><strong>You'll get for each trending story:</strong></p>
+            <ul>
+                <li>
+                    <strong>✍️ Creative Headline (70-85 chars)</strong>
+                    Ready-to-use teaser headlines for writers
+                </li>
+                <li>
+                    <strong>🔥 Viral Score (1-10)</strong>
+                    Automatic scoring for shareability and traffic potential
+                </li>
+                <li>
+                    <strong>💬 Viral Quote/Moment</strong>
+                    The exact quote or moment driving engagement
+                </li>
+                <li>
+                    <strong>🎯 Unique Angle</strong>
+                    What makes this story different or special
+                </li>
+                <li>
+                    <strong>📝 Story Development Ideas</strong>
+                    3 angles to expand into fuller content
+                </li>
+                <li>
+                    <strong>🔑 Trending Keywords</strong>
+                    Top hashtags and search terms
+                </li>
+                <li>
+                    <strong>📊 Engagement Metrics</strong>
+                    Platform source, sentiment, and estimated reach
+                </li>
+                <li>
+                    <strong>⭐ Key Insights</strong>
+                    Top trend, emerging stories, controversies, must-cover
+                </li>
+            </ul>
+        </div>
+
+        <div class="form-card">
+            <form id="trendingForm">
+                <div class="form-section">
+                    <label>Select Content Category</label>
+                    <div class="category-grid">
+                        <div class="category-option">
+                            <input type="radio" name="category" id="cat-all" value="all" checked>
+                            <label for="cat-all" class="category-label">
+                                <div class="category-icon">🌟</div>
+                                <div class="category-name">All Categories</div>
+                            </label>
+                        </div>
+
+                        <div class="category-option">
+                            <input type="radio" name="category" id="cat-entertainment" value="entertainment">
+                            <label for="cat-entertainment" class="category-label">
+                                <div class="category-icon">🎭</div>
+                                <div class="category-name">Entertainment</div>
+                            </label>
+                        </div>
+
+                        <div class="category-option">
+                            <input type="radio" name="category" id="cat-celebrity" value="celebrity">
+                            <label for="cat-celebrity" class="category-label">
+                                <div class="category-icon">⭐</div>
+                                <div class="category-name">Celebrity News</div>
+                            </label>
+                        </div>
+
+                        <div class="category-option">
+                            <input type="radio" name="category" id="cat-tech" value="tech">
+                            <label for="cat-tech" class="category-label">
+                                <div class="category-icon">📱</div>
+                                <div class="category-name">Tech/Streaming</div>
+                            </label>
+                        </div>
+
+                        <div class="category-option">
+                            <input type="radio" name="category" id="cat-movies" value="movies">
+                            <label for="cat-movies" class="category-label">
+                                <div class="category-icon">🎬</div>
+                                <div class="category-name">Movies & TV</div>
+                            </label>
+                        </div>
+
+                        <div class="category-option">
+                            <input type="radio" name="category" id="cat-sports" value="sports">
+                            <label for="cat-sports" class="category-label">
+                                <div class="category-icon">⚽</div>
+                                <div class="category-name">Sports</div>
+                            </label>
+                        </div>
+
+                        <div class="category-option">
+                            <input type="radio" name="category" id="cat-gaming" value="gaming">
+                            <label for="cat-gaming" class="category-label">
+                                <div class="category-icon">🎮</div>
+                                <div class="category-name">Video Games</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="generate-btn">
+                    ⚡ Find Trending Content in Claude
+                </button>
+            </form>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <div class="feature-title">Real-Time Search</div>
+                <div class="feature-desc">AI searches across Twitter, Reddit, TikTok, YouTube, and news platforms</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✍️</div>
+                <div class="feature-title">Creative Headlines</div>
+                <div class="feature-desc">Get ready-to-use headline suggestions (70-85 characters) for every story</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">Viral Scoring</div>
+                <div class="feature-desc">Each story rated 1-10 for viral potential and shareability</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💡</div>
+                <div class="feature-title">Story Angles</div>
+                <div class="feature-desc">3 development ideas for each story to expand coverage</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔑</div>
+                <div class="feature-title">Trending Keywords</div>
+                <div class="feature-desc">Top hashtags and search terms driving engagement</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">Unique Angles</div>
+                <div class="feature-desc">What makes each story special and worth covering</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('trendingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const selectedCategory = document.querySelector('input[name="category"]:checked').value;
+
+            const categoryMap = {
+                'all': 'Entertainment, Celebrity News, Technology/Streaming (Netflix, YouTube, etc.), Movies & TV, Sports, Video Games',
+                'entertainment': 'Entertainment (Award shows, celebrity events, entertainment industry news)',
+                'celebrity': 'Celebrity News (Celebrity gossip, relationships, controversies, viral moments)',
+                'tech': 'Technology/Streaming (Netflix releases, YouTube trends, streaming wars, tech product launches, platform updates)',
+                'movies': 'Movies & TV (New releases, trailers, casting news, reviews, box office, streaming debuts)',
+                'sports': 'Sports (Game highlights, player news, trades, viral sports moments, athlete social media)',
+                'gaming': 'Video Games (New game releases, gaming industry news, esports, streamer drama, gaming controversies)'
+            };
+
+            const categoryText = categoryMap[selectedCategory];
+            const categoryEmoji = {
+                'all': '🌟',
+                'entertainment': '🎭',
+                'celebrity': '⭐',
+                'tech': '📱',
+                'movies': '🎬',
+                'sports': '⚽',
+                'gaming': '🎮'
+            }[selectedCategory];
+
+            const prompt = `You are an elite AI content aggregator analyzing trending content across social media and news platforms.
+
+TASK: Find and analyze the TOP 12-15 trending stories RIGHT NOW in this category:
+${categoryText}
+
+For EACH trending story, provide:
+
+1. **Story Title** - Clear, engaging summary of what happened
+2. **Creative Headline** (70-85 characters) - Teaser that hooks readers WITHOUT giving everything away. Use curiosity, emotion, or quotes.
+3. **Category** - Entertainment/Celebrity/Tech/Movies/Sports/Gaming
+4. **Source Platform** - Where it's trending (Twitter, Reddit, Instagram, TikTok, YouTube, News Sites)
+5. **Viral Quote/Moment** - The exact quote, clip description, or moment driving engagement
+6. **Engagement Level** - Extreme/Very High/High/Moderate
+7. **Engagement Details** - Estimated metrics (e.g., "2.3M views, 450K likes, 89K shares")
+8. **Viral Score** (1-10) - Rate based on:
+   - Shareability (how likely people will share)
+   - Controversy level
+   - Celebrity/brand power
+   - Emotional appeal
+   - Timeliness
+9. **Sentiment** - Positive/Negative/Controversial/Neutral
+10. **Unique Angle** - What makes this story different, special, or worth covering
+11. **Story Development Ideas** (2-3) - Specific angles to develop this into fuller content
+12. **Trending Keywords** (3-5) - Top hashtags and search terms
+13. **Time Posted** - How recent (e.g., "2 hours ago", "30 minutes ago", "1 day ago")
+14. **Why Trending** - Brief explanation of why this is blowing up right now
+
+PRIORITIZE:
+- Stories with massive engagement (100K+ interactions)
+- Breaking news and viral moments from the last 24 hours
+- Celebrity quotes and reactions going viral
+- Controversies and debates trending now
+- Fan reactions and viral memes
+- Behind-the-scenes revelations
+- Platform-specific trends (TikTok sounds, YouTube drama, Reddit discussions)
+
+At the end, provide **KEY INSIGHTS**:
+- **Top Trend**: The #1 trending story overall
+- **Emerging Stories**: 2-3 stories with rapid growth potential
+- **Controversies**: Major debates or drama happening now
+- **Must Cover**: Stories you absolutely need to cover immediately
+- **Platform Breakdown**: How many stories from each platform (e.g., Twitter: 5, Reddit: 3, TikTok: 4)
+
+Format it clearly with:
+- Number each story (#1, #2, etc.)
+- Use bold headings for each section
+- Include the ${categoryEmoji} emoji for the category
+- Make it easy to scan and read
+- Put the creative headline prominently for each story
+
+Be comprehensive and give writers everything they need to create great content!`;
+
+            const encodedPrompt = encodeURIComponent(prompt);
+            const claudeURL = `https://claude.ai/new?q=${encodedPrompt}`;
+            
+            window.open(claudeURL, '_blank');
+        });
+    </script>
+</body>
+</html>
